@@ -39,61 +39,45 @@ def compare(usr_score, com_score):
             print("It's a draw!")
 
 
-end_game = False
-while not end_game:
+def blackjack():
     # Initial cards
     user_cards = []
     computer_cards = []
-    deal_flag = True
+    end_game = False
 
-    want_play = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
-    if want_play == 'y':
-        print(logo)
-        for _ in range(2):
-            user_cards.append(deal_card())
-            computer_cards.append(deal_card())
+    print(logo)
+    for _ in range(2):
+        user_cards.append(deal_card())
+        computer_cards.append(deal_card())
 
+    # User play
+    while not end_game:
         user_score = calculate_score(cards_in_hand=user_cards)
         computer_score = calculate_score(cards_in_hand=computer_cards)
 
         print(f"\tYour cards: {user_cards}, current score: {user_score}")
-        print(f"\tComputer's first card: {computer_cards}, current score: {computer_score}")
+        print(f"\tComputer's first card: {computer_cards[0]}")
 
-        if user_score == 0 or computer_score == 0:
-            print(f"\tYour final hand: {user_cards}, final score: {user_score}")
-            print(f"\tComputer's final hand: {computer_cards}, final score: {computer_score}")
-            if user_score == computer_score:
-                print("You both have blackjack!")
-            elif user_score == 0:
-                print("You win! Blackjack!")
-            elif computer_score == 0:
-                print("You lose! Computer Blackjack!")
-            continue
-
-        # User play
-        while deal_flag:
+        if user_score == 0 or computer_score == 0 or user_score > 21:
+            end_game = True
+        else:
             want_deal = input("Type 'y' to get another card, type 'n' to pass: ")
             if want_deal == 'y':
                 user_cards.append(deal_card())
                 user_score = calculate_score(cards_in_hand=user_cards)
-                if user_score > 21:
-                    deal_flag = False
-                    # end_game = True
-                print(f"\tYour cards: {user_cards}, current score: {user_score}")
-                print(f"\tComputer's first hand: {computer_cards}, final score: {computer_score}")
             elif want_deal == 'n':
-                deal_flag = False
+                end_game = True
 
-        # Computer play
-        while computer_score != 0 and computer_score < 17:
-            computer_cards.append(deal_card())
-            computer_score = calculate_score(cards_in_hand=computer_cards)
+    # Computer play
+    while computer_score != 0 and computer_score < 17:
+        computer_cards.append(deal_card())
+        computer_score = calculate_score(cards_in_hand=computer_cards)
 
-        print(f"\tYour final hand: {user_cards}, final score: {user_score}")
-        print(f"\tComputer's final card: {computer_cards}, current score: {computer_score}")
+    print(f"\tYour final hand: {user_cards}, final score: {user_score}")
+    print(f"\tComputer's final card: {computer_cards}, current score: {computer_score}")
 
-        compare(usr_score=user_score, com_score=computer_score)
+    compare(usr_score=user_score, com_score=computer_score)
 
-    elif want_play == 'n':
-        end_game = True
 
+while input("Do you want to play a game of Blackjack? Type 'y' or 'n': ") == 'y':
+    blackjack()
